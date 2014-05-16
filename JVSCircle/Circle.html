@@ -1,0 +1,83 @@
+<html>
+<head>
+	<title>Javascript Demo - Bubbles</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<style type="text/css">
+	body {
+		background-color:black;
+	}
+	</style>
+</head>
+<body>
+
+	<svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
+
+	<script>
+
+	
+	var counter = 2;
+	var circles = {};
+
+	function makeSVG(tag, attrs) {
+        var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (var k in attrs)
+        {
+            el.setAttribute(k, attrs[k]);
+        }
+        return el;
+    }
+
+    //draws a star
+	function createCircle(cx,cy,r)
+	{
+		var circle = makeSVG('circle', 
+			{ cx: cx,
+			  cy: cy,
+			  r:  r,
+			  id: 'circle_'+counter,
+			  style: "fill: white"
+			});
+
+		//the key will be the HTML id and the value will be the radius
+		circles['circle_'+counter] = { radius: r };
+
+		counter++;
+		document.getElementById('svg').appendChild(circle);
+	}
+
+
+	function updateCircles()
+	{
+		for(circle in circles)
+		{
+			var el = document.getElementById(circle);
+			var color = 240-parseInt(circles[circle].radius/80*255);
+			circles[circle].radius = circles[circle].radius+1;
+
+			
+			el.setAttribute("r", circles[circle].radius);
+			el.setAttribute("style", "fill: rgb("+color+","+color+","+color+"); ");
+
+			if(circles[circle].radius > 90)
+			{
+				document.getElementById('svg').removeChild(el);
+				delete circles[circle];
+			}
+		}
+	}
+
+	
+	function mainLoop()
+    {
+    	
+    	createCircle(Math.random()*document.body.clientWidth, Math.random()*document.body.clientHeight, 10);
+   
+    	updateCircles();	
+    }
+
+	setInterval(mainLoop, 50);
+
+	</script>
+
+</body>
+</html>
